@@ -2,7 +2,7 @@
   <img src="https://img.icons8.com/external-flatart-icons-outline-flatarticons/128/external-video-conference-work-from-home-flatart-icons-outline-flatarticons.png" width="120"/>
 </p>
 
-<h1 align="center">MeetSpace</h1>
+<h2 align="center">MeetSpace</h2>
 
 <p align="center">
 Real-Time Video Conferencing Platform built with WebRTC, Socket.IO and the MERN Stack

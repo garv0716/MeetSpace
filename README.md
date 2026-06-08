@@ -200,13 +200,13 @@ GET  /api/v1/users/history
 - TURN server integration for NAT traversal  
 - Docker-based deployment  
 
----
+------
 
 # 👨‍💻 Author
 
 Garv Gupta
 
----
+------
 
 # 📜 License
 

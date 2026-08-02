@@ -1,213 +1,509 @@
-<p align="center">
-  <img src="https://img.icons8.com/external-flatart-icons-outline-flatarticons/128/external-video-conference-work-from-home-flatart-icons-outline-flatarticons.png" width="120"/>
-</p>
+# MeetSpace
 
-<h1 align="center">MeetSpace</h1>
+MeetSpace is a full-stack real-time video conferencing application built with React, Node.js, Express, MongoDB, Socket.IO, and WebRTC. It supports authenticated users, instant meeting creation, shareable meeting codes, meeting activity history, real-time signaling, multi-user rooms, and in-meeting chat.
 
-<p align="center">
-Real-Time Video Conferencing Platform built with WebRTC, Socket.IO and the MERN Stack
-</p>
+The project is structured as a MERN-style application with a separate React client and Express API/signaling server.
 
-<p align="center">
+## Table Of Contents
 
-![React](https://img.shields.io/badge/Frontend-React-blue)
-![Node](https://img.shields.io/badge/Backend-Node.js-green)
-![Express](https://img.shields.io/badge/Framework-Express-black)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-brightgreen)
-![WebRTC](https://img.shields.io/badge/Realtime-WebRTC-orange)
-![Socket.IO](https://img.shields.io/badge/Realtime-Socket.IO-black)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Configuration](#environment-configuration)
+- [Available Scripts](#available-scripts)
+- [API Reference](#api-reference)
+- [Realtime Events](#realtime-events)
+- [Data Models](#data-models)
+- [Development Notes](#development-notes)
+- [Known Improvements](#known-improvements)
 
-</p>
+## Features
 
----
+- User registration and login with bcrypt password hashing
+- Token-based session persistence using browser local storage
+- Protected routes for authenticated app pages
+- Modern auth UI with sign-in/sign-up switching
+- Home dashboard with user greeting, meeting stats, recent rooms, and quick actions
+- Create instant meetings from the dashboard
+- Join meetings by room code
+- Copy shareable meeting links
+- Meeting history persisted in MongoDB
+- Multi-user video rooms powered by WebRTC
+- Socket.IO signaling for offer/answer and ICE candidate exchange
+- In-meeting chat message relay through Socket.IO
+- Responsive frontend layouts for desktop and mobile
 
-# 🚀 Overview
+## Architecture
 
-MeetSpace is a **full-stack real-time video conferencing web application** that allows users to create and join meeting rooms using shareable links.
+```text
+Browser Client
+  |
+  | React Router / Context API
+  |
+  | REST API: auth, dashboard, history, meeting creation
+  v
+Express API Server
+  |
+  | Mongoose
+  v
+MongoDB
 
-The platform uses **WebRTC for peer-to-peer audio/video streaming** and **Socket.IO for real-time signaling**, enabling seamless communication between participants.
+Browser Client A
+  |
+  | Socket.IO signaling: join-call, signal, chat-message
+  v
+Socket.IO Server
+  |
+  | WebRTC offer/answer + ICE exchange
+  v
+Browser Client B
 
-This project demonstrates how modern web technologies can be used to build scalable collaboration tools similar to professional video conferencing platforms.
-
----
-
-# ✨ Features
-
-- Real-time video and audio communication  
-- Join meetings using shareable meeting URLs  
-- Multi-user meeting rooms  
-- Real-time signaling with Socket.IO  
-- Peer-to-peer media streaming using WebRTC  
-- Meeting history tracking  
-- User authentication system  
-
----
-
-# 🛠 Tech Stack
-
-### Frontend
-- React.js  
-- React Router  
-- Context API  
-- HTML5  
-- CSS3  
-
-### Backend
-- Node.js  
-- Express.js  
-- Socket.IO  
-
-### Database
-- MongoDB  
-- Mongoose  
-
-### Real-Time Communication
-- WebRTC  
-- Socket.IO  
-
----
-
-# 🏗 System Architecture
-
-```
-User A (Browser)
-     │
-     │  WebRTC Offer / Answer
-     │
-Socket.IO Signaling Server
-     │
-     │  ICE Candidate Exchange
-     │
-User B (Browser)
+After signaling completes, media streams travel peer-to-peer through WebRTC.
 ```
 
-### Communication Flow
+## Tech Stack
 
-1. User creates or joins a meeting room.  
-2. Client establishes a Socket.IO connection with the backend server.  
-3. Signaling messages are exchanged between participants.  
-4. WebRTC establishes a peer-to-peer connection.  
-5. Video and audio streams are transmitted directly between users.
+**Frontend**
 
----
+- React 18
+- React Router 6
+- Material UI
+- Axios
+- Socket.IO Client
+- WebRTC browser APIs
+- CSS modules and page-level CSS
 
-# 📂 Project Structure
+**Backend**
 
-```
-MeetSpace
-│
+- Node.js
+- Express
+- Socket.IO
+- Mongoose
+- bcrypt
+- http-status
+
+**Database**
+
+- MongoDB
+
+## Project Structure
+
+```text
+.
 ├── backend
+│   ├── package.json
 │   └── src
+│       ├── app.js
 │       ├── controllers
-│       │      socketManager.js
-│       │
+│       │   ├── socketManager.js
+│       │   └── user.controller.js
 │       ├── models
-│       │
-│       ├── routes
-│       │      users.routes.js
-│       │
-│       └── app.js
+│       │   ├── meeting.model.js
+│       │   └── user.model.js
+│       └── routes
+│           └── users.routes.js
 │
 └── frontend
+    ├── package.json
+    ├── public
     └── src
+        ├── App.js
         ├── contexts
-        │      AuthContext.js
-        │
+        │   └── AuthContext.jsx
         ├── pages
-        │      landing
-        │      authentication
-        │      home
-        │      VideoMeet
-        │      history
-        │
+        │   ├── authentication.jsx
+        │   ├── home.jsx
+        │   ├── history.jsx
+        │   ├── landing.jsx
+        │   └── VideoMeet.jsx
         ├── styles
-        ├── utils
-        └── App.js
+        └── utils
+            └── withAuth.jsx
 ```
 
----
+## Getting Started
 
-# ⚙️ Installation
+### Prerequisites
 
-## Clone the Repository
+- Node.js 18 or newer recommended
+- npm
+- MongoDB connection string
 
-```bash
-git clone https://github.com/yourusername/meetspace.git
-cd meetspace
-```
-
----
-
-## Backend Setup
+### 1. Install Backend Dependencies
 
 ```bash
 cd backend
 npm install
 ```
 
-Create `.env` file
-
-```
-PORT=8000
-MONGO_URI=your_mongodb_connection_string
-```
-
-Run backend server
-
-```bash
-npm start
-```
-
----
-
-## Frontend Setup
+### 2. Install Frontend Dependencies
 
 ```bash
 cd frontend
 npm install
-npm start
 ```
 
-Frontend runs on
+### 3. Configure The Frontend API Target
 
-```
-http://localhost:3000
+For local backend development, set `IS_PROD` to `false` in:
+
+```text
+frontend/src/environment.js
 ```
 
-Backend runs on
+Expected local API target:
 
+```js
+let IS_PROD = false;
 ```
+
+This points the frontend to:
+
+```text
 http://localhost:8000
 ```
 
----
+### 4. Start The Backend
 
-# 🔗 API Endpoints
-
-```
-POST /api/v1/users/register
-POST /api/v1/users/login
-GET  /api/v1/users/history
+```bash
+cd backend
+npm start
 ```
 
----
+Backend runs on:
 
-# 🔮 Future Improvements
+```text
+http://localhost:8000
+```
 
-- Screen sharing support  
-- In-meeting chat system  
-- Meeting recording feature  
-- TURN server integration for NAT traversal  
-- Docker-based deployment  
+### 5. Start The Frontend
 
----
+```bash
+cd frontend
+npm start
+```
 
-# 👨‍💻 Author
+Frontend runs on:
+
+```text
+http://localhost:3000
+```
+
+## Environment Configuration
+
+Recommended backend environment variables:
+
+```env
+PORT=8000
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/meetspace
+```
+
+Current implementation note: `backend/src/app.js` still contains a hardcoded MongoDB connection string. For production-quality configuration, move that value into `process.env.MONGO_URI` before deploying or sharing the project publicly.
+
+Recommended backend connection pattern:
+
+```js
+await mongoose.connect(process.env.MONGO_URI);
+```
+
+## Available Scripts
+
+### Backend
+
+```bash
+npm start
+```
+
+Runs the Express and Socket.IO server with Node.
+
+```bash
+npm run dev
+```
+
+Runs the backend with nodemon.
+
+```bash
+npm run prod
+```
+
+Runs the backend with pm2.
+
+### Frontend
+
+```bash
+npm start
+```
+
+Starts the React development server.
+
+```bash
+npm run build
+```
+
+Creates an optimized production build.
+
+```bash
+npm test
+```
+
+Runs the Create React App test runner.
+
+## API Reference
+
+Base URL:
+
+```text
+/api/v1/users
+```
+
+### Register
+
+```http
+POST /register
+```
+
+Request body:
+
+```json
+{
+  "name": "Garv Gupta",
+  "username": "garv",
+  "password": "password123"
+}
+```
+
+Success response:
+
+```json
+{
+  "message": "User Registered"
+}
+```
+
+### Login
+
+```http
+POST /login
+```
+
+Request body:
+
+```json
+{
+  "username": "garv",
+  "password": "password123"
+}
+```
+
+Success response:
+
+```json
+{
+  "token": "generated-session-token"
+}
+```
+
+### Get Meeting History
+
+```http
+GET /get_all_activity?token=generated-session-token
+```
+
+Success response:
+
+```json
+[
+  {
+    "_id": "meeting-id",
+    "user_id": "garv",
+    "meetingCode": "meet-a1b2c3",
+    "title": "Team Sync",
+    "status": "created",
+    "date": "2026-08-02T13:30:00.000Z"
+  }
+]
+```
+
+### Add Joined Meeting To History
+
+```http
+POST /add_to_activity
+```
+
+Request body:
+
+```json
+{
+  "token": "generated-session-token",
+  "meeting_code": "meet-a1b2c3",
+  "title": "Joined Meeting"
+}
+```
+
+Success response:
+
+```json
+{
+  "message": "Added code to history"
+}
+```
+
+### Get Dashboard Summary
+
+```http
+GET /dashboard?token=generated-session-token
+```
+
+Success response:
+
+```json
+{
+  "user": {
+    "name": "Garv Gupta",
+    "username": "garv"
+  },
+  "stats": {
+    "totalMeetings": 12,
+    "uniqueRooms": 8,
+    "recentMeetings": 6
+  },
+  "recentMeetings": []
+}
+```
+
+### Create Instant Meeting
+
+```http
+POST /create_meeting
+```
+
+Request body:
+
+```json
+{
+  "token": "generated-session-token",
+  "title": "Team Sync"
+}
+```
+
+Success response:
+
+```json
+{
+  "message": "Meeting created",
+  "meeting": {
+    "_id": "meeting-id",
+    "user_id": "garv",
+    "meetingCode": "meet-a1b2c3",
+    "title": "Team Sync",
+    "status": "created",
+    "date": "2026-08-02T13:30:00.000Z"
+  }
+}
+```
+
+## Realtime Events
+
+Socket.IO is initialized on the same backend HTTP server.
+
+### `join-call`
+
+Client joins a room path.
+
+```js
+socket.emit("join-call", window.location.href);
+```
+
+Server broadcasts:
+
+```js
+socket.emit("user-joined", socketId, roomConnections);
+```
+
+### `signal`
+
+Used for WebRTC offer, answer, and ICE candidate exchange.
+
+```js
+socket.emit("signal", targetSocketId, message);
+```
+
+Server relays:
+
+```js
+socket.emit("signal", senderSocketId, message);
+```
+
+### `chat-message`
+
+Used for in-room chat relay.
+
+```js
+socket.emit("chat-message", message, sender);
+```
+
+Server broadcasts:
+
+```js
+socket.emit("chat-message", message, sender, senderSocketId);
+```
+
+### `disconnect`
+
+Server removes the socket from its active room and broadcasts:
+
+```js
+socket.emit("user-left", socketId);
+```
+
+## Data Models
+
+### User
+
+```js
+{
+  name: String,
+  username: String,
+  password: String,
+  token: String
+}
+```
+
+### Meeting
+
+```js
+{
+  user_id: String,
+  meetingCode: String,
+  title: String,
+  status: String,
+  date: Date
+}
+```
+
+## Development Notes
+
+- Authentication currently uses a generated token stored on the user document.
+- Frontend route protection is handled by `withAuth`.
+- Meeting history and dashboard data are persisted in MongoDB.
+- Socket room state and chat messages are kept in server memory.
+- WebRTC media streams are peer-to-peer after signaling.
+- For local end-to-end testing, run both backend and frontend at the same time.
+
+## Known Improvements
+
+- Move MongoDB connection string to `MONGO_URI`.
+- Replace custom token storage with JWT or secure server-managed sessions.
+- Add request validation for auth and meeting endpoints.
+- Add centralized API error handling middleware.
+- Persist chat messages if long-term history is required.
+- Add TURN server support for production-grade NAT traversal.
+- Add automated backend tests for auth, dashboard, and meeting creation.
+- Add frontend tests for protected routes and dashboard actions.
+- Add Docker Compose for local MongoDB, backend, and frontend orchestration.
+
+## Author
 
 Garv Gupta
-
----
-
-# 📜 License
-
-This project is licensed under the MIT License.

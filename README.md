@@ -483,11 +483,4 @@ socket.emit("user-left", socketId);
 }
 ```
 
-## Development Notes
 
-- Authentication currently uses a generated token stored on the user document.
-- Frontend route protection is handled by `withAuth`.
-- Meeting history and dashboard data are persisted in MongoDB.
-- Socket room state and chat messages are kept in server memory.
-- WebRTC media streams are peer-to-peer after signaling.
-- For local end-to-end testing, run both backend and frontend at the same time..

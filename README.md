@@ -1,4 +1,4 @@
-# MeetSpace
+## MeetSpace
 
 MeetSpace is a full-stack real-time video conferencing application built with React, Node.js, Express, MongoDB, Socket.IO, and WebRTC. It supports authenticated users, instant meeting creation, shareable meeting codes, meeting activity history, real-time signaling, multi-user rooms, and in-meeting chat.
 

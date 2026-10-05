@@ -4,7 +4,7 @@ MeetSpace is a full-stack real-time video conferencing application built with Re
 
 The project is structured as a MERN-style application with a separate React client and Express API/signaling server.
 
-## Table Of Contents
+# Table Of Contents
 
 - [Features](#features)
 - [Architecture](#architecture)
